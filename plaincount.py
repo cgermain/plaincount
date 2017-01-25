@@ -17,7 +17,7 @@ def main(plain_parse_file):
 			# column 0 = filename
 			# column 16 = protein
 			# column 18 = gene
-			protein = row[16] if row[18] == "None" else row[18]
+			protein = row[16] if row[18].startswith("None") else row[18]
 			mgf_file = row[0]
 			if protein not in protein_dict:
 				protein_dict[protein] = {}
@@ -30,7 +30,9 @@ def main(plain_parse_file):
 
 	timestamp = datetime.now().strftime(TIME_FORMAT)
 
-	with open(gpm_filename+"_count_"+timestamp+".csv", 'wb') as out_file:
+	out_filename = gpm_filename+"_count_"+timestamp+".csv"
+
+	with open(out_filename, 'wb') as out_file:
 		csvwriter = csv.writer(out_file)
 		csvwriter.writerow(["Protein"]+header)
 		for protein in protein_dict:
@@ -42,8 +44,11 @@ def main(plain_parse_file):
 					line.append("")
 			csvwriter.writerow(line)
 
+	print "Wrote out: " + out_filename
+
 if __name__ == "__main__":
 	if len(sys.argv) == 2:
 		main(sys.argv[1])
 	else:
 		print "Usage: python plaincount.py plain_parsed_file"
+	raw_input("press ENTER to exit")
