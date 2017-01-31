@@ -8,14 +8,8 @@ def main(plain_parse_file):
 	protein_dict = {}
 	header = []
 
-	print "starting"
-	print os.path.split(plain_parse_file)
-	
 	base_directory = os.path.split(plain_parse_file)[0]
 	gpm_filename = os.path.split(plain_parse_file)[1].split("-pep-merged.txt")[0]
-
-	print "directory: " + base_directory
-	print "filename: " + gpm_filename
 
 	with open(plain_parse_file, "rb") as in_file:
 		csvreader = csv.reader(in_file, delimiter='\t')
@@ -24,7 +18,7 @@ def main(plain_parse_file):
 			# column 0 = filename
 			# column 16 = protein
 			# column 18 = gene
-			protein = row[16] if row[18].startswith("None") else row[18]
+			protein = row[16]
 			mgf_file = row[0]
 			if protein not in protein_dict:
 				protein_dict[protein] = {}
