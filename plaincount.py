@@ -1,14 +1,21 @@
-import csv, sys
+import csv, sys, re, os
 from datetime import datetime
 
-TIME_FORMAT =  "%m-%d-%Y_%H-%M-%S"
+TIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 
 def main(plain_parse_file):
 	protein_mgf_list = []
 	protein_dict = {}
 	header = []
 
-	gpm_filename = plain_parse_file.split("-")[0]
+	print "starting"
+	print os.path.split(plain_parse_file)
+	
+	base_directory = os.path.split(plain_parse_file)[0]
+	gpm_filename = os.path.split(plain_parse_file)[1].split("-pep-merged.txt")[0]
+
+	print "directory: " + base_directory
+	print "filename: " + gpm_filename
 
 	with open(plain_parse_file, "rb") as in_file:
 		csvreader = csv.reader(in_file, delimiter='\t')
@@ -30,7 +37,7 @@ def main(plain_parse_file):
 
 	timestamp = datetime.now().strftime(TIME_FORMAT)
 
-	out_filename = gpm_filename+"_count_"+timestamp+".csv"
+	out_filename = os.path.join(base_directory, gpm_filename+"_protein_count_"+timestamp+".csv")
 
 	with open(out_filename, 'wb') as out_file:
 		csvwriter = csv.writer(out_file)
@@ -47,8 +54,9 @@ def main(plain_parse_file):
 	print "Wrote out: " + out_filename
 
 if __name__ == "__main__":
-	if len(sys.argv) == 2:
+	if len(sys.argv) == 2 and sys.argv[1].endswith("pep-merged.txt"):
 		main(sys.argv[1])
 	else:
-		print "Usage: python plaincount.py plain_parsed_file"
+		print "Usage: python plaincount.py plain_parse_file"
+		print "Note: Plain parse file ends with -pep-merged.txt"
 	raw_input("press ENTER to exit")
