@@ -6,5 +6,5 @@ setup(
 				'bundle_files': 1,
 				'dll_excludes': ['w9xpopen.exe']
 				}},
-	console = ['plaincount_gene.py'],
+	console = ['plaincount.py'],
 	zipfile = None)
